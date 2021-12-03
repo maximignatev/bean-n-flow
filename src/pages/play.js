@@ -5,6 +5,8 @@ import Crunker from 'crunker'
 let crunker = new Crunker()
 
 export default () => {
+  const [ready, setReady] = useState(false)
+  const [result, setResult] = useState(false)
   const { setScreen, voice, selectedTrack } = useContext(AppContext)
 
   useEffect(() => {
@@ -24,7 +26,8 @@ export default () => {
         // crunker.download(output.blob)
         document.body.append(output.element)
         console.log(output.url)
-        alert('check')
+        setResult(output.blob)
+        setReady(true)
       })
       .catch((error) => {
         // => Error Message
@@ -35,11 +38,18 @@ export default () => {
     })
   }, [])
 
+  if (!ready)
+    return (
+      <div className="w-full h-full flex flex-col items-center">
+        <span>hold on...</span>
+      </div>
+    )
+
   return (
     <div className="w-full h-full flex flex-col items-center">
       <span>3. Your track</span>
       <div className="flex flex-col"></div>
-      <button onClick={() => setScreen(1)}>Choose</button>
+      <button onClick={() => crunker.download(result)}>Download</button>
     </div>
   )
 }
