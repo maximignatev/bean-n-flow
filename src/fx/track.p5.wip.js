@@ -1,3 +1,11 @@
+// const { addWebpackPlugin } = require('customize-cra')
+// const webpack = require('webpack')
+// addWebpackPlugin(
+//   new webpack.ProvidePlugin({
+//     p5: 'p5',
+//   }),
+// ),
+
 import React, { useState, useContext, useEffect } from 'react'
 import { AppContext } from 'context'
 import useSound from 'use-sound'
