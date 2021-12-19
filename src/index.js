@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import App from './app'
 import { AppProvider } from 'context'
 import './assets/index.css'
 
-// Pointcap 🔥
 ReactDOM.render(
   <React.StrictMode>
     <AppProvider>
