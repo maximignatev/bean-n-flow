@@ -9,12 +9,12 @@ const path = require('path')
 module.exports = override(
   addWebpackResolve({
     alias: {
+      pages: path.resolve(__dirname, 'src/pages/'),
       components: path.resolve(__dirname, 'src/components/'),
-      hooks: path.resolve(__dirname, 'src/hooks/'),
-      styles: path.resolve(__dirname, 'src/styles/'),
-      icons: path.resolve(__dirname, 'src/assets/icons'),
-      sounds: path.resolve(__dirname, 'src/assets/sounds'),
       context: path.resolve(__dirname, 'src/context'),
+      data: path.resolve(__dirname, 'src/data'),
+      sounds: path.resolve(__dirname, 'src/assets/sounds'),
+      icons: path.resolve(__dirname, 'src/assets/icons'),
     },
   }),
   addWebpackModuleRule({

@@ -7,7 +7,7 @@ let crunker = new Crunker()
 export default () => {
   const [ready, setReady] = useState(false)
   const [result, setResult] = useState(false)
-  const { setScreen, voice, selectedTrack } = useContext(AppContext)
+  const { voice, selectedTrack } = useContext(AppContext)
 
   useEffect(() => {
     crunker

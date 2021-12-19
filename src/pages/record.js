@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import { AppContext } from 'context'
 import MicRecorder from 'mic-recorder-to-mp3'
 import Crunker from 'crunker'

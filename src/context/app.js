@@ -1,20 +1,5 @@
 import React, { createContext, useState } from 'react'
-
-import soundA from 'sounds/Cool Breeze - Assimilation.mp3'
-import soundB from 'sounds/Lord Finesse - Master Ya High (Instrumental).mp3'
-
-const tracks = [
-  {
-    id: 1,
-    name: 'One',
-    url: soundA,
-  },
-  {
-    id: 2,
-    name: 'Two',
-    url: soundB,
-  },
-]
+import tracks from 'data/tracks'
 
 const AppContext = createContext()
 
