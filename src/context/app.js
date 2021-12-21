@@ -1,12 +1,25 @@
 import React, { createContext, useState } from 'react'
 import tracks from 'data/tracks'
 
+import * as Tone from 'tone'
+
 const AppContext = createContext()
+
+const player = new Tone.Player().toDestination()
 
 const AppProvider = ({ children }) => {
   const [screen, setScreen] = useState(1)
   const [selectedTrack, setSelectedTrack] = useState(null)
   const [voice, setVoice] = useState(null)
+
+  const startSong = async (url) => {
+    await player.load(url)
+    player.start()
+  }
+
+  const stopSong = () => {
+    player.stop()
+  }
 
   return (
     <AppContext.Provider
@@ -18,6 +31,10 @@ const AppProvider = ({ children }) => {
         setSelectedTrack,
         voice,
         setVoice,
+
+        player,
+        startSong,
+        stopSong,
       }}
     >
       {children}

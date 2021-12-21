@@ -1,56 +1,38 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { AppContext } from 'context'
-import useSound from 'use-sound'
-
-import p5 from 'p5'
-import 'p5/lib/addons/p5.sound'
 
 const Track = ({ track }) => {
-  const { selectedTrack, setSelectedTrack, screen } = useContext(AppContext)
-  const [playTrack, { stop, sound }] = useSound(track.url)
+  const { selectedTrack, setSelectedTrack, startSong, stopSong } =
+    useContext(AppContext)
   const [isActive, setActive] = useState(
     selectedTrack && selectedTrack.name === track.name,
   )
 
   useEffect(() => {
     if (selectedTrack && selectedTrack.name === track.name) {
+      startSong(track.url)
       setActive(true)
-
-      const delay = new p5.Delay()
-
-      const soundFile = new p5.SoundFile(track.url, function () {
-        // alert('success')
-        delay.process(soundFile, 0.12, 0.7, 2300)
-        soundFile.play()
-      })
-      // soundFile.play()
-
-      // sound.play()
-      // console.log(sound.source)
-      // console.log(sound)
-      // console.log(delay)
-      // delay.process(window.Howler.ctx.destination, 0.12, 0.7, 2300)
-      // playTrack()
     } else {
+      stopSong()
       setActive(false)
-      stop()
     }
-  }, [selectedTrack, track, playTrack, stop, screen])
+  }, [selectedTrack, track, startSong, stopSong])
 
   // on unmount stop playing
   useEffect(() => {
     return () => {
-      stop()
+      stopSong()
     }
-  }, [stop])
+  }, [stopSong])
 
   return (
     <div
-      className={isActive ? 'border border-red-500' : ''}
+      className={`truncate flex items-center px-2 py-1.5 ${
+        isActive ? 'border border-red-500' : ''
+      }`}
       onClick={() => setSelectedTrack(track)}
     >
       {track.name}
-      <span />
     </div>
   )
 }

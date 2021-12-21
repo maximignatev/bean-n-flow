@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { AppContext } from 'context'
-import Crunker from 'crunker'
 
-let crunker = new Crunker()
+import Header from 'components/layout/header'
+import Footer from 'components/layout/footer'
+import Content from 'components/layout/content'
 
 export default () => {
   const [ready, setReady] = useState(false)
@@ -10,46 +11,35 @@ export default () => {
   const { voice, selectedTrack } = useContext(AppContext)
 
   useEffect(() => {
-    crunker
-      .fetchAudio(selectedTrack.url, voice)
-      .then((buffers) => {
-        console.log('buffers')
-        // => [AudioBuffer, AudioBuffer]
-        return crunker.mergeAudio(buffers)
-      })
-      .then((merged) => {
-        // => AudioBuffer
-        return crunker.export(merged, 'audio/mp3')
-      })
-      .then((output) => {
-        // => {blob, element, url}
-        // crunker.download(output.blob)
-        document.body.append(output.element)
-        console.log(output.url)
-        setResult(output.blob)
-        setReady(true)
-      })
-      .catch((error) => {
-        // => Error Message
-      })
+    const audio = document.createElement('audio')
+    audio.src = voice
+    audio.controls = true
+    document.getElementById('track').append(audio)
+  }, [voice])
 
-    crunker.notSupported(() => {
-      // Handle no browser support
-    })
-  }, [])
-
-  if (!ready)
-    return (
-      <div className="w-full h-full flex flex-col items-center">
-        <span>hold on...</span>
-      </div>
-    )
+  const downloadTrack = () => {
+    const anchor = document.createElement('a')
+    anchor.download = 'recording.webm'
+    anchor.href = voice
+    anchor.click()
+  }
 
   return (
     <div className="w-full h-full flex flex-col items-center">
-      <span>3. Your track</span>
-      <div className="flex flex-col"></div>
-      <button onClick={() => crunker.download(result)}>Download</button>
+      <Header>
+        <span>3. Your track</span>
+      </Header>
+      <Content>
+        <div
+          className="h-full w-full flex items-center justify-center"
+          id="track"
+        ></div>
+      </Content>
+      <Footer>
+        <button onClick={downloadTrack} className="w-full h-full">
+          Download
+        </button>
+      </Footer>
     </div>
   )
 }

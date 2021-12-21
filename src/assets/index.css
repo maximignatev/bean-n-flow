@@ -3,25 +3,11 @@
 @tailwind utilities;
 
 body {
-  width: 100vw;
-  height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
 
 #root {
   width: 100%;
   height: 100%;
-}
-
-.st0 {
-  fill: #f44336;
-  stroke: #f44336;
-  stroke-miterlimit: 10;
-}
-
-#square,
-#star {
-  visibility: hidden;
 }

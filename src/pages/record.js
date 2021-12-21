@@ -1,87 +1,55 @@
 import React, { useState, useContext } from 'react'
 import { AppContext } from 'context'
-import MicRecorder from 'mic-recorder-to-mp3'
-import Crunker from 'crunker'
-import useSound from 'use-sound'
+import * as Tone from 'tone'
 
-const recorder = new MicRecorder({
-  bitRate: 128,
-})
+import Header from 'components/layout/header'
+import Footer from 'components/layout/footer'
+import Content from 'components/layout/content'
 
-let crunker = new Crunker()
+const recorder = new Tone.Recorder()
+const mic = new Tone.UserMedia().chain(recorder)
 
 export default () => {
   const [recording, setRecording] = useState(false)
-  const { selectedTrack, setVoice, setScreen } = useContext(AppContext)
-  const [play, { stop }] = useSound(selectedTrack.url)
+  const { selectedTrack, setVoice, setScreen, startSong, stopSong } =
+    useContext(AppContext)
 
   const record = () => {
     setRecording(true)
+    mic.open()
     recorder.start()
-    play()
-    //
+    startSong(selectedTrack.url)
   }
 
-  const stopRecording = () => {
-    setRecording(true)
-    stop()
+  const stopRecording = async () => {
+    setRecording(false)
+    stopSong()
 
-    recorder
-      .stop()
-      .getMp3()
-      .then(([buffer, blob]) => {
-        // do what ever you want with buffer and blob
-        // Example: Create a mp3 file and play
-        const file = new File(buffer, 'me-at-thevoice.mp3', {
-          type: blob.type,
-          lastModified: Date.now(),
-        })
-
-        console.log(URL.createObjectURL(file))
-        console.log(file)
-
-        const voiceUrl = URL.createObjectURL(file)
-        // crunker
-        //   .fetchAudio(selectedTrack.url, voiceUrl)
-        //   .then((buffers) => {
-        //     console.log('buffers')
-        //     // => [AudioBuffer, AudioBuffer]
-        //     return crunker.mergeAudio(buffers)
-        //   })
-        //   .then((merged) => {
-        //     // => AudioBuffer
-        //     return crunker.export(merged, 'audio/mp3')
-        //   })
-        //   .then((output) => {
-        //     // => {blob, element, url}
-        //     // crunker.download(output.blob)
-        //     document.body.append(output.element)
-        //     console.log(output.url)
-        //     alert('check')
-        //   })
-        //   .catch((error) => {
-        //     // => Error Message
-        //   })
-
-        // crunker.notSupported(() => {
-        //   // Handle no browser support
-        // })
-
-        setVoice(URL.createObjectURL(file))
-        setScreen(3)
-        // const player = new Audio(URL.createObjectURL(file))
-        // alert('ok')
-      })
+    await mic.close()
+    const recording = await recorder.stop()
+    const url = URL.createObjectURL(recording)
+    setVoice(url)
+    setScreen(3)
   }
 
   return (
     <div className="w-full h-full flex flex-col items-center">
-      <span>2. Press rec when ready</span>
-      {recording ? (
-        <button onClick={() => stopRecording()}>Stop</button>
-      ) : (
-        <button onClick={() => record()}>Record</button>
-      )}
+      <Header>
+        <span>2. Record voice</span>
+      </Header>
+      <Content>
+        <div className="h-full w-full flex items-center justify-center">
+          {recording ? 'Press stop to finish' : 'Press rec when ready'}
+        </div>
+      </Content>
+      <Footer>
+        <button
+          onClick={() => (recording ? stopRecording() : record())}
+          className="w-full h-full"
+        >
+          {recording ? 'Stop' : 'Record'}
+        </button>
+      </Footer>
     </div>
   )
 }

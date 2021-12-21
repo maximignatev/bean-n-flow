@@ -8,6 +8,14 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <!-- <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script> -->
     <title>beat and flow</title>
+    <script>
+      // load this bundle only for browsers without MediaRecorder support
+      if (!window.MediaRecorder) {
+        document.write(
+          decodeURI('%3Cscript defer src="/polyfill.js">%3C/script>'),
+        )
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
