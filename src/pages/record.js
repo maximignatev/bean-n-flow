@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { AppContext } from 'context'
 import * as Tone from 'tone'
 
@@ -11,14 +11,30 @@ const mic = new Tone.UserMedia().chain(recorder)
 
 export default () => {
   const [recording, setRecording] = useState(false)
-  const { selectedTrack, setVoice, setScreen, startSong, stopSong } =
+  const { selectedTrack, setVoice, setScreen, startSong, stopSong, player } =
     useContext(AppContext)
 
-  const record = () => {
+  useEffect(() => {
+    // request microphone permission
+    navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: false,
+    })
+  }, [])
+
+  const record = async () => {
     setRecording(true)
-    mic.open()
-    recorder.start()
-    startSong(selectedTrack.url)
+
+    Tone.Transport.scheduleOnce(async () => {
+      await mic.open()
+      recorder.start()
+      player.start()
+    })
+
+    Tone.Transport.start()
+
+    // await startSong(selectedTrack.url, false)
+    // recorder.start()
   }
 
   const stopRecording = async () => {

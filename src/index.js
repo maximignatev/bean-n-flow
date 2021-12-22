@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { AppProvider } from 'context'
+import { AppProvider, FXProvider } from 'context'
 import './assets/index.css'
 
 import AudioRecorder from 'audio-recorder-polyfill'
@@ -16,7 +16,9 @@ const App = (props) => (
 ReactDOM.render(
   <React.StrictMode>
     <AppProvider>
-      <App />
+      <FXProvider>
+        <App />
+      </FXProvider>
     </AppProvider>
   </React.StrictMode>,
   document.getElementById('root'),

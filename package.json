@@ -18,6 +18,7 @@
     "styled-components": "^5.0.1",
     "tone": "^14.7.77",
     "tunajs": "^1.0.15",
+    "use-immer": "^0.6.0",
     "use-sound": "^1.0.2"
   },
   "scripts": {

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { FXContext } from 'context'
 import * as Tone from 'tone'
 
 import FX from 'components/fx'
@@ -9,36 +10,15 @@ import effects from 'data/fx'
 // const mic = new Tone.UserMedia().chain(pitchShift, recorder).toDestination()
 
 export default () => {
+  const { effectsArr } = useContext(FXContext)
   const [recording, setRecording] = useState(false)
-  const [pitch, setPitch] = useState('8')
 
   const [recorder] = useState(new Tone.Recorder())
-  const [effectsArr] = useState(
-    effects.map((effect) =>
-      new Tone[effect.name](
-        Object.assign(
-          {},
-          ...effect.params.map((item) => ({ [item.label]: item.defaultValue })),
-        ),
-      ).toDestination(),
-    ),
-  )
-  const [pitchShift] = useState(new Tone.PitchShift(8).toDestination())
   const [mic] = useState(
     new Tone.UserMedia()
-      .chain(...effectsArr, pitchShift, recorder)
+      .chain(...effectsArr.map((fx) => fx.effect), recorder)
       .toDestination(),
   )
-
-  // do this if preview instantly
-  // useEffect(() => {
-  //   Tone.start()
-  //   mic.open()
-  // }, [])
-
-  useEffect(() => {
-    pitchShift.pitch = +pitch
-  }, [pitch])
 
   const start = () => {
     Tone.start()
@@ -64,20 +44,18 @@ export default () => {
   return (
     <div className="w-full h-full flex flex-col items-center">
       <span>2. Press rec when ready</span>
-      <input
-        type="range"
-        id="volume"
-        name="volume"
-        step="0"
-        min="-12"
-        max="12"
-        value={pitch}
-        onChange={(e) => setPitch(e.target.value)}
-      />
-      {/*
-       */}
-      {effects.map((effect) => (
-        <FX effect={effect} key={effect.name} />
+      {effectsArr.map((effect, index) => (
+        <FX
+          effect={effect}
+          key={effect.name}
+          changeEffect={(effect, key, value) => {
+            effectsArr[
+              effectsArr.findIndex((fx) => fx.name === effect)
+            ].effect.set({
+              [key]: value,
+            })
+          }}
+        />
       ))}
       {recording ? (
         <button onClick={stop}>Stop</button>
@@ -87,3 +65,4 @@ export default () => {
     </div>
   )
 }
+// effects.find(effect => effect.name)

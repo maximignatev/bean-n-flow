@@ -9,7 +9,7 @@ import Mic from './pages/mic-with-fx'
 const App = () => {
   const { screen } = useContext(AppContext)
 
-  // return <Mic />
+  return <Mic />
 
   // Select track screen
   if (screen === 1) {

@@ -12,8 +12,14 @@ const AppProvider = ({ children }) => {
   const [selectedTrack, setSelectedTrack] = useState(null)
   const [voice, setVoice] = useState(null)
 
-  const startSong = async (url) => {
-    await player.load(url)
+  const startSong = async (url, toLoad = true) => {
+    // if (url !== player.url) {
+    // await player.load(url)
+    // }
+    if (toLoad) {
+      await player.load(url)
+    }
+
     player.start()
   }
 

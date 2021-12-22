@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { AppContext } from 'context'
+import * as Tone from 'tone'
 
 const Track = ({ track }) => {
   const { selectedTrack, setSelectedTrack, startSong, stopSong } =
@@ -30,7 +31,14 @@ const Track = ({ track }) => {
       className={`truncate flex items-center px-2 py-1.5 ${
         isActive ? 'border border-red-500' : ''
       }`}
-      onClick={() => setSelectedTrack(track)}
+      onClick={() => {
+        // if (!Tone.started) {
+
+        // Tone.start()
+        // }
+        Tone.start()
+        setSelectedTrack(track)
+      }}
     >
       {track.name}
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 const Slider = ({
   label = 'Range',
@@ -6,9 +6,10 @@ const Slider = ({
   max = 100,
   step = 1,
   defaultValue = 50,
-  // onChange = () => {},
+  value: propValue,
+  onChange = () => {},
 }) => {
-  const [value, setValue] = useState(defaultValue)
+  const [value, setValue] = useState(propValue)
 
   return (
     <div className="flex flex-col">
@@ -19,10 +20,14 @@ const Slider = ({
         max={max}
         step={step}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => {
+          setValue(e.target.value)
+          onChange(e)
+        }}
       />
     </div>
   )
 }
+// onChange={(e) => setValue(e.target.value)}
 
 export default Slider
