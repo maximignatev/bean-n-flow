@@ -15,6 +15,7 @@ const Slider = ({
     <div className="flex flex-col">
       <label className="text-sm">{label}</label>
       <input
+        style={{ transform: 'scale(1.5)' }}
         type="range"
         min={min}
         max={max}

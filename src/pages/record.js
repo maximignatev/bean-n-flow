@@ -1,18 +1,31 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { AppContext } from 'context'
+import React, { useState, useContext, useEffect, useCallback } from 'react'
+import { AppContext, FXContext } from 'context'
 import * as Tone from 'tone'
 
 import Header from 'components/layout/header'
 import Footer from 'components/layout/footer'
 import Content from 'components/layout/content'
 
-const recorder = new Tone.Recorder()
-const mic = new Tone.UserMedia().chain(recorder)
+import FX from 'components/fx'
 
-export default () => {
+// const recorder = new Tone.Recorder()
+// const mic = new Tone.UserMedia().chain(recorder)
+
+export default ({ withFx = false }) => {
   const [recording, setRecording] = useState(false)
   const { selectedTrack, setVoice, setScreen, startSong, stopSong, player } =
     useContext(AppContext)
+  const { effectsArr, toggleConnect, connected } = useContext(FXContext)
+
+  const [recorder] = useState(new Tone.Recorder())
+  const [mic] = useState(
+    withFx
+      ? new Tone.UserMedia().chain(
+          ...effectsArr.map((fx) => fx.effect),
+          recorder,
+        )
+      : new Tone.UserMedia().chain(recorder),
+  )
 
   useEffect(() => {
     // request microphone permission
@@ -54,8 +67,49 @@ export default () => {
         <span>2. Record voice</span>
       </Header>
       <Content>
-        <div className="h-full w-full flex items-center justify-center">
+        <div className="h-full w-full flex flex-col items-center justify-center">
           {recording ? 'Press stop to finish' : 'Press rec when ready'}
+
+          {withFx && (
+            <>
+              {effectsArr.map((effect, index) => (
+                <FX
+                  effect={effect}
+                  key={effect.name}
+                  changeEffect={(effect, key, value) => {
+                    effectsArr[
+                      effectsArr.findIndex((fx) => fx.name === effect)
+                    ].effect.set({
+                      [key]: value,
+                    })
+                  }}
+                />
+              ))}
+
+              <div>
+                <input
+                  type="checkbox"
+                  id="hearYourVoice"
+                  name="hearYourVoice"
+                  value={connected}
+                  onChange={useCallback(() => {
+                    if (connected) {
+                      if (!recording) {
+                        mic.close()
+                        mic.disconnect(Tone.getDestination())
+                      }
+                    } else {
+                      mic.open()
+                      mic.connect(Tone.getDestination())
+                    }
+
+                    toggleConnect()
+                  }, [connected, recording])}
+                />
+                <label for="hearYourVoice">Hear your voice?</label>
+              </div>
+            </>
+          )}
         </div>
       </Content>
       <Footer>

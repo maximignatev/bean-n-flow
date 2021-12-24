@@ -67,19 +67,19 @@ const effects = [
       },
     ],
   },
-  // {
-  //   name: 'Distortion',
-  //   params: [
-  //     {
-  //       name: 'Distortion',
-  //       key: 'distortion',
-  //       defaultValue: 0,
-  //       min: 0,
-  //       max: 1,
-  //       step: 0.05,
-  //     },
-  //   ],
-  // },
+  {
+    name: 'Distortion',
+    params: [
+      {
+        name: 'Distortion',
+        key: 'distortion',
+        defaultValue: 0.2,
+        min: 0,
+        max: 1,
+        step: 0.05,
+      },
+    ],
+  },
 ]
 // {
 //   name: 'AutoFilter',
