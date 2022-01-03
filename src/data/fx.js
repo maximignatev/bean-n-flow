@@ -1,10 +1,11 @@
 import * as Tone from 'tone'
 
-// pitch shift
-// frequency shift
-// distortion
-// reverb
-// delay
+// + pitch shift
+// + frequency shift
+// - delay
+// - reverb
+// - distortion
+
 const effects = [
   {
     name: 'PitchShift',
@@ -33,53 +34,53 @@ const effects = [
       },
     ],
   },
-  {
-    name: 'FeedbackDelay',
-    params: [
-      {
-        name: 'Time',
-        key: 'delayTime',
-        defaultValue: 0,
-        min: 0,
-        max: 1,
-        step: 0.05,
-      },
-      {
-        name: 'Feedback',
-        key: 'feedback',
-        defaultValue: 0,
-        min: 0,
-        max: 1,
-        step: 0.05,
-      },
-    ],
-  },
-  {
-    name: 'JCReverb',
-    params: [
-      {
-        name: 'roomSize',
-        key: 'roomSize',
-        defaultValue: 0.0001,
-        min: 0,
-        max: 1,
-        step: 0.1,
-      },
-    ],
-  },
-  {
-    name: 'Distortion',
-    params: [
-      {
-        name: 'Distortion',
-        key: 'distortion',
-        defaultValue: 0.2,
-        min: 0,
-        max: 1,
-        step: 0.05,
-      },
-    ],
-  },
+  // {
+  //   name: 'FeedbackDelay',
+  //   params: [
+  //     {
+  //       name: 'Delay time',
+  //       key: 'delayTime',
+  //       defaultValue: 0,
+  //       min: 0,
+  //       max: 1,
+  //       step: 0.05,
+  //     },
+  //     {
+  //       name: 'Delay feedback',
+  //       key: 'feedback',
+  //       defaultValue: 0,
+  //       min: 0,
+  //       max: 1,
+  //       step: 0.05,
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: 'JCReverb',
+  //   params: [
+  //     {
+  //       name: 'Reverb',
+  //       key: 'roomSize',
+  //       defaultValue: 0.0001,
+  //       min: 0,
+  //       max: 1,
+  //       step: 0.1,
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: 'Distortion',
+  //   params: [
+  //     {
+  //       name: 'Distortion',
+  //       key: 'distortion',
+  //       defaultValue: 0.2,
+  //       min: 0,
+  //       max: 1,
+  //       step: 0.05,
+  //     },
+  //   ],
+  // },
 ]
 // {
 //   name: 'AutoFilter',

@@ -12,10 +12,9 @@ const Slider = ({
   const [value, setValue] = useState(propValue)
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <label className="text-sm">{label}</label>
       <input
-        style={{ transform: 'scale(1.5)' }}
         type="range"
         min={min}
         max={max}
@@ -23,7 +22,7 @@ const Slider = ({
         value={value}
         onChange={(e) => {
           setValue(e.target.value)
-          onChange(e)
+          onChange(e.target.value)
         }}
       />
     </div>

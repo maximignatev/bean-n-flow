@@ -15,6 +15,7 @@ module.exports = override(
       data: path.resolve(__dirname, 'src/data'),
       sounds: path.resolve(__dirname, 'src/assets/sounds'),
       icons: path.resolve(__dirname, 'src/assets/icons'),
+      helpers: path.resolve(__dirname, 'src/helpers'),
     },
   }),
   addWebpackModuleRule({

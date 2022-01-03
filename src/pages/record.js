@@ -11,7 +11,8 @@ import FX from 'components/fx'
 // const recorder = new Tone.Recorder()
 // const mic = new Tone.UserMedia().chain(recorder)
 
-export default ({ withFx = false }) => {
+export default ({ withFx = true }) => {
+  const [showFx, setShowFx] = useState(false)
   const [recording, setRecording] = useState(false)
   const { selectedTrack, setVoice, setScreen, startSong, stopSong, player } =
     useContext(AppContext)
@@ -62,54 +63,67 @@ export default ({ withFx = false }) => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col items-center">
+    <div className="w-full h-full flex flex-col items-center max-h-screen">
       <Header>
         <span>2. Record voice</span>
+        {withFx && (
+          <div
+            onClick={() => setShowFx(!showFx)}
+            className={`absolute right-0 h-full w-16 flex items-center justify-center cursor-pointer ${
+              showFx ? 'text-red-500' : 'text-current'
+            }`}
+          >
+            FX
+          </div>
+        )}
       </Header>
       <Content>
+        <div
+          className={`py-4 px-6 ${
+            showFx ? 'block' : 'hidden'
+          } flex flex-col items-center`}
+        >
+          <div className="flex flex-col w-full space-y-4">
+            {effectsArr.map((effect, index) => (
+              <FX
+                effect={effect}
+                key={effect.name}
+                changeEffect={(effect, key, value) => {
+                  effectsArr[
+                    effectsArr.findIndex((fx) => fx.name === effect)
+                  ].effect.set({
+                    [key]: value,
+                  })
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="mt-8">
+            <input
+              type="checkbox"
+              id="hearYourVoice"
+              name="hearYourVoice"
+              value={connected}
+              onChange={useCallback(() => {
+                if (connected) {
+                  if (!recording) {
+                    mic.close()
+                    mic.disconnect(Tone.getDestination())
+                  }
+                } else {
+                  mic.open()
+                  mic.connect(Tone.getDestination())
+                }
+
+                toggleConnect()
+              }, [connected, recording])}
+            />
+            <label for="hearYourVoice">Hear your voice?</label>
+          </div>
+        </div>
         <div className="h-full w-full flex flex-col items-center justify-center">
           {recording ? 'Press stop to finish' : 'Press rec when ready'}
-
-          {withFx && (
-            <>
-              {effectsArr.map((effect, index) => (
-                <FX
-                  effect={effect}
-                  key={effect.name}
-                  changeEffect={(effect, key, value) => {
-                    effectsArr[
-                      effectsArr.findIndex((fx) => fx.name === effect)
-                    ].effect.set({
-                      [key]: value,
-                    })
-                  }}
-                />
-              ))}
-
-              <div>
-                <input
-                  type="checkbox"
-                  id="hearYourVoice"
-                  name="hearYourVoice"
-                  value={connected}
-                  onChange={useCallback(() => {
-                    if (connected) {
-                      if (!recording) {
-                        mic.close()
-                        mic.disconnect(Tone.getDestination())
-                      }
-                    } else {
-                      mic.open()
-                      mic.connect(Tone.getDestination())
-                    }
-
-                    toggleConnect()
-                  }, [connected, recording])}
-                />
-                <label for="hearYourVoice">Hear your voice?</label>
-              </div>
-            </>
-          )}
         </div>
       </Content>
       <Footer>

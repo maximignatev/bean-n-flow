@@ -8,7 +8,7 @@ export default ({ children }) => {
         maxHeight: '80vh',
         maxWidth: '100vw',
       }}
-      className="overflow-auto w-full h-full"
+      className="overflow-auto w-full h-full flex flex-col relative"
     >
       {children}
     </div>

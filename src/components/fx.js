@@ -34,7 +34,7 @@ const FX = ({ effect, changeEffect }) => {
   const [enabled, setEnabled] = useState(false)
 
   return (
-    <div className="flex flex-col w-full px-16">
+    <div className="flex flex-col w-full">
       <div className="flex items-center" onClick={() => setEnabled(!enabled)}>
         {/*
         <input
@@ -44,28 +44,29 @@ const FX = ({ effect, changeEffect }) => {
           onChange={(e) => setEnabled(e.target.value)}
           className="mr-1"
         />
-        */}
         <label htmlFor={effect.name} className="font-medium">
           {effect.name}
         </label>
+        */}
       </div>
 
-      {effect.params.map((param) => {
-        console.log(effect.effect[param.key])
-        return (
-          <Slider
-            label={param.name}
-            value={effect.effect[param.key].value}
-            min={param.min}
-            max={param.max}
-            step={param.step}
-            key={param.name}
-            onChange={(e) => {
-              changeEffect(effect.name, param.key, e.target.value)
-            }}
-          />
-        )
-      })}
+      <div className="flex flex-col space-y-4">
+        {effect.params.map((param) => {
+          return (
+            <Slider
+              label={param.name}
+              value={effect.effect[param.key].value}
+              min={param.min}
+              max={param.max}
+              step={param.step}
+              key={param.name}
+              onChange={(value) => {
+                changeEffect(effect.name, param.key, value)
+              }}
+            />
+          )
+        })}
+      </div>
     </div>
   )
 }
