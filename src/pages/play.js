@@ -1,50 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { AppContext } from 'context'
 import * as Tone from 'tone'
-import toWav from 'audiobuffer-to-wav'
-import lamejs from 'lamejs'
+import { exportWav } from 'helpers'
 
 import Header from 'components/layout/header'
 import Footer from 'components/layout/footer'
 import Content from 'components/layout/content'
 import Slider from 'components/slider'
-
-import Crunker from 'crunker'
-
-const crunker = new Crunker()
-
-const exportWav = (buffer) => {
-  // I use recorderWorker.js to save the WAV file
-  // https://webaudiodemos.appspot.com/AudioRecorder/js/recorderjs/recorderWorker.js
-  // Included it in html, because couldn't find out how to do it any other way
-  const workerBlob = new Blob([document.getElementById('worker').textContent])
-  const worker = new Worker(window.URL.createObjectURL(workerBlob))
-
-  worker.postMessage({
-    command: 'init',
-    config: {
-      sampleRate: 44100,
-    },
-  })
-  worker.postMessage({
-    command: 'record',
-    buffer: [buffer.getChannelData(0), buffer.getChannelData(1)],
-  })
-  worker.postMessage({
-    command: 'exportWAV',
-    type: 'audio/wav',
-  })
-  worker.onmessage = (event) => {
-    console.log(event)
-    const blob = event.data
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.setAttribute('download', 'test.wav')
-    document.body.appendChild(link)
-    link.click()
-  }
-}
 
 export default () => {
   const { voice, selectedTrack } = useContext(AppContext)
@@ -52,30 +14,24 @@ export default () => {
   const [voiceVolume, setVoiceVolume] = useState(0)
   const [loading, setLoading] = useState(false)
 
-  // const context = new Tone.OfflineContext(2, 30, 44100)
   const [beatPlayer] = useState(
     new Tone.Player({
       url: selectedTrack.url,
       volume: beatVolume,
-      // context,
     }).toDestination(),
   )
   const [voicePlayer] = useState(
     new Tone.Player({
       url: voice,
       volume: voiceVolume,
-      // context,
     }).toDestination(),
   )
 
   const play = async () => {
     await beatPlayer.load(selectedTrack.url)
-    console.log('beat load')
     await voicePlayer.load(voice)
-    console.log('voice load')
 
     Tone.Transport.scheduleOnce(() => {
-      console.log('start')
       beatPlayer.start()
       voicePlayer.start()
     })
@@ -107,24 +63,13 @@ export default () => {
       await transport.scheduleOnce((time) => {
         bp.start(time)
         vp.start(time)
-        // osc.start(time).stop(time + 5)
       }, 5)
       // make sure to start the transport
       transport.start()
     }, l).then((buffer) => {
-      // do something with the output buffer
       setLoading(false)
-      console.log('then')
       exportWav(buffer)
     })
-    // context.render().then((buffer) => {
-    //   console.log('buffer')
-    //   console.log(buffer)
-    //   console.log(buffer.downloads)
-    //   console.log(buffer.url)
-    //   console.log(buffer.baseUrl)
-    //   exportWav(buffer)
-    // })
   }
 
   return (

@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react'
-import tracks from 'data/tracks'
+import initTracks from 'data/tracks'
 
 import * as Tone from 'tone'
 
@@ -8,6 +8,7 @@ const AppContext = createContext()
 const player = new Tone.Player().toDestination()
 
 const AppProvider = ({ children }) => {
+  const [tracks, setTracks] = useState(initTracks)
   const [screen, setScreen] = useState(1)
   const [selectedTrack, setSelectedTrack] = useState(null)
   const [voice, setVoice] = useState(null)
@@ -28,6 +29,7 @@ const AppProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         tracks,
+        setTracks,
         screen,
         setScreen,
         selectedTrack,

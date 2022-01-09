@@ -1,5 +1,6 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { AppContext } from 'context'
+import * as Tone from 'tone'
 
 import Header from 'components/layout/header'
 import Footer from 'components/layout/footer'
@@ -8,7 +9,20 @@ import Content from 'components/layout/content'
 import Track from 'components/track'
 
 export default () => {
-  const { tracks, setScreen, selectedTrack } = useContext(AppContext)
+  const { tracks, setTracks, setScreen, selectedTrack, setSelectedTrack } =
+    useContext(AppContext)
+
+  const changeHandler = async (event) => {
+    const file = event.target.files[0]
+    const url = URL.createObjectURL(file)
+
+    const track = { url, name: file.name }
+
+    setTracks([track, ...tracks])
+
+    setSelectedTrack(track)
+    Tone.start()
+  }
 
   return (
     <div className="w-full h-full flex flex-col items-center max-h-screen">
@@ -24,20 +38,26 @@ export default () => {
             <Track track={track} key={track.name} />
           ))}
         </div>
-        <button
+        <input
+          id="file-upload"
+          type="file"
+          name="file"
+          onChange={changeHandler}
+        />
+        <label
+          htmlFor="file-upload"
           onClick={() => {
-            alert('upload')
+            // alert('upload')
           }}
-          className="w-full h-full flex items-center justify-center border-t border-gray-300 fixed"
+          className="w-full h-full flex items-center justify-center border-t border-gray-300 fixed cursor-pointer"
           style={{
             height: '10vh',
-            // position: fixed;
             bottom: '10vh',
             background: 'white',
           }}
         >
           Upload track
-        </button>
+        </label>
       </Content>
       <Footer>
         <button
