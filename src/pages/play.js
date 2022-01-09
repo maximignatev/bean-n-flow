@@ -9,28 +9,13 @@ import Content from 'components/layout/content'
 import Slider from 'components/slider'
 
 export default () => {
-  const { voice, selectedTrack } = useContext(AppContext)
+  const { voice, selectedTrack, beatPlayer, voicePlayer } =
+    useContext(AppContext)
   const [beatVolume, setBeatVolume] = useState(-5)
   const [voiceVolume, setVoiceVolume] = useState(0)
   const [loading, setLoading] = useState(false)
 
-  const [beatPlayer] = useState(
-    new Tone.Player({
-      url: selectedTrack.url,
-      volume: beatVolume,
-    }).toDestination(),
-  )
-  const [voicePlayer] = useState(
-    new Tone.Player({
-      url: voice,
-      volume: voiceVolume,
-    }).toDestination(),
-  )
-
   const play = async () => {
-    await beatPlayer.load(selectedTrack.url)
-    await voicePlayer.load(voice)
-
     Tone.Transport.scheduleOnce(() => {
       beatPlayer.start()
       voicePlayer.start()
@@ -46,29 +31,18 @@ export default () => {
 
     Tone.Offline(async ({ transport }) => {
       setLoading(true)
-      const osc = new Tone.Oscillator().toDestination()
-      const bp = new Tone.Player({
-        // url: selectedTrack.url,
-        volume: beatVolume,
-      }).toDestination()
-      const vp = new Tone.Player({
-        // url: voice,
-        volume: voiceVolume,
-      }).toDestination()
-
-      await bp.load(selectedTrack.url)
-      console.log('-_-')
-      await vp.load(voice)
 
       await transport.scheduleOnce((time) => {
-        bp.start(time)
-        vp.start(time)
+        beatPlayer.start(time)
+        voicePlayer.start(time)
       }, 5)
       // make sure to start the transport
       transport.start()
     }, l).then((buffer) => {
       setLoading(false)
       exportWav(buffer)
+      // beatPlayer.stop()
+      // voicePlayer.stop()
     })
   }
 

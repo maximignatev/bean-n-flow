@@ -14,8 +14,15 @@ import FX from 'components/fx'
 export default ({ withFx = true }) => {
   const [showFx, setShowFx] = useState(false)
   const [recording, setRecording] = useState(false)
-  const { selectedTrack, setVoice, setScreen, startSong, stopSong, player } =
-    useContext(AppContext)
+  const {
+    selectedTrack,
+    setVoice,
+    voicePlayer,
+    setScreen,
+    startSong,
+    stopSong,
+    beatPlayer,
+  } = useContext(AppContext)
   const { effectsArr, toggleConnect, connected } = useContext(FXContext)
 
   const [recorder] = useState(new Tone.Recorder())
@@ -42,7 +49,7 @@ export default ({ withFx = true }) => {
     Tone.Transport.scheduleOnce(async () => {
       await mic.open()
       recorder.start()
-      player.start()
+      beatPlayer.start()
     })
 
     Tone.Transport.start()
@@ -58,6 +65,7 @@ export default ({ withFx = true }) => {
     await mic.close()
     const recording = await recorder.stop()
     const url = URL.createObjectURL(recording)
+    voicePlayer.load(url)
     setVoice(url)
     setScreen(3)
   }

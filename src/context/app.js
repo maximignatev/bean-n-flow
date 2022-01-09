@@ -5,24 +5,25 @@ import * as Tone from 'tone'
 
 const AppContext = createContext()
 
-const player = new Tone.Player().toDestination()
-
 const AppProvider = ({ children }) => {
   const [tracks, setTracks] = useState(initTracks)
   const [screen, setScreen] = useState(1)
   const [selectedTrack, setSelectedTrack] = useState(null)
   const [voice, setVoice] = useState(null)
 
+  const [beatPlayer] = useState(new Tone.Player().toDestination())
+  const [voicePlayer] = useState(new Tone.Player().toDestination())
+
   const startSong = async (url, toLoad = true) => {
     if (toLoad) {
-      await player.load(url)
+      await beatPlayer.load(url)
     }
 
-    player.start()
+    beatPlayer.start()
   }
 
   const stopSong = () => {
-    player.stop()
+    beatPlayer.stop()
   }
 
   return (
@@ -37,7 +38,8 @@ const AppProvider = ({ children }) => {
         voice,
         setVoice,
 
-        player,
+        beatPlayer,
+        voicePlayer,
         startSong,
         stopSong,
       }}
